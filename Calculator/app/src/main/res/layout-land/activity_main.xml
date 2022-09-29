@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black_shade_3"
+    tools:context=".MainActivity">
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fragmentContainerDisplay"
+        android:name="com.example.calculator.Display"
+        android:layout_width="match_parent"
+        android:layout_height="124dp"
+        tools:layout="@layout/fragment_display" />
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fragmentContainerNumpad"
+        android:name="com.example.calculator.Numpad"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/fragmentContainerDisplay"
+        tools:layout="@layout/fragment_numpad" />
+
+</RelativeLayout>
+

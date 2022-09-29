@@ -79,14 +79,20 @@ class NumpadFragment : Fragment() {
         var str: String = "0."
         var data  = dataModel.data.value
         if(!data.isNullOrEmpty()) {
-            if(str.length < 16){
-                if("." !in data.toString()){
+//            if(str.length < 16){
+//                if("." !in data.toString()){
+//                    str = dataModel.data.value.toString()
+//                    str += "."
+//                }else{
+//                    str = dataModel.data.value.toString()
+//                }
+//            }
+            if("." !in data.toString()){
                     str = dataModel.data.value.toString()
                     str += "."
                 }else{
                     str = dataModel.data.value.toString()
                 }
-            }
         }
         dataModel.data.value = str
     }
@@ -97,13 +103,14 @@ class NumpadFragment : Fragment() {
             str = value
         }else{
             str = dataModel.data.value.toString()
-            if(str.length < 16){
-                str += value
-            }
-            else{
-                Toast.makeText(requireContext(), "Out of limit!", Toast.LENGTH_SHORT).show()
-
-            }
+//            if(str.length < 16){
+//                str += value
+//            }
+//            else{
+//                Toast.makeText(requireContext(), "Out of limit!", Toast.LENGTH_SHORT).show()
+//
+//            }
+            str += value
         }
         dataModel.data.value = str
     }
