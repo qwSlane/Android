@@ -26,8 +26,8 @@ class Container : Fragment() {
     private lateinit var binding: FragmentContainerBinding
 
     private val coeffs : Array<DoubleArray> = arrayOf(
-        doubleArrayOf(0.0022, 0.035, 1.0),
-        doubleArrayOf(0.011, 0.033, 1.0),
+        doubleArrayOf(0.0022046226218488, 0.03527396195, 1.0),
+        doubleArrayOf(0.010936132983, 0.03280839895, 1.0),
         doubleArrayOf(33.8, 1.0, 274.1)
     )
 
@@ -48,14 +48,15 @@ class Container : Fragment() {
         binding.spinnerFrom.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
             override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
                 c1 = currentCoeff[p2]
-                setChanges()
+                setEmpty()
             }
             override fun onNothingSelected(p0: AdapterView<*>?) {}
         }
         binding.spinnerTo.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
             override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
                 c2 = currentCoeff[p2]
-                setChanges()
+                setEmpty()
+
             }
             override fun onNothingSelected(p0: AdapterView<*>?) {}
         }
@@ -64,6 +65,27 @@ class Container : Fragment() {
             val clipboard = requireActivity().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
             clipboard.setPrimaryClip(ClipData.newPlainText("App", binding.textFrom.text))
             Toast.makeText(requireContext(), "Copied!", Toast.LENGTH_SHORT).show()
+        }
+
+        binding.textTo.setOnClickListener {
+            val clipboard = requireActivity().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+            clipboard.setPrimaryClip(ClipData.newPlainText("App", binding.textTo.text))
+            Toast.makeText(requireContext(), "Copied!", Toast.LENGTH_SHORT).show()
+        }
+
+        binding.buttonPaste.setOnClickListener{
+            val clipboard = requireActivity().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+            val value = clipboard?.primaryClip
+            val item = value?.getItemAt(0)
+            val pasteData = item?.text
+//            if(pasteData.toString().length >16){
+//                Toast.makeText(requireContext(), "Buffer overflow!", Toast.LENGTH_SHORT).show()
+//            }
+//            else{
+//                dataModel.data.value = pasteData.toString()
+//            }
+            dataModel.data.value = pasteData.toString()
+
         }
 
         binding.exchange.setOnClickListener{
@@ -76,10 +98,14 @@ class Container : Fragment() {
             c2 = currentCoeff[coeff]
             spiner.setSelection(coeff2)
             spiner2.setSelection(coeff)
-            setChanges()
+
         }
 
         return binding.root
+    }
+
+    private fun setEmpty() {
+        dataModel.data.value = ""
     }
 
     private fun setChanges(){
@@ -95,8 +121,10 @@ class Container : Fragment() {
         dataModel.data.observe(activity as LifecycleOwner) {
             if(it.isNotBlank()){
                 (binding.textFrom as TextView).text = it
-                var num: BigDecimal = BigDecimal(dataModel.data.value).times(BigDecimal(c2).divide(BigDecimal(c1)))
-                binding.textTo.setText(num.toPlainString())
+                var num: BigDecimal = BigDecimal(dataModel.data.value).times(BigDecimal(c2).divide(BigDecimal(c1),
+                    MathContext(1000)
+                ))
+                binding.textTo.setText(num.toPlainString().dropLastWhile { it == '0' })
             }else{
                 binding.textFrom.setText("")
                 binding.textTo.setText("")
