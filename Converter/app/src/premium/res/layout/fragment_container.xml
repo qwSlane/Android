@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Container">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <Spinner
+            android:id="@+id/spinnerTo"
+            android:layout_width="157dp"
+            android:layout_height="48dp"
+            android:layout_marginBottom="112dp"
+            android:layout_weight="1"
+            android:contentDescription="@string/to"
+            android:entries="@array/forWeight"
+            app:layout_constraintBottom_toTopOf="@+id/guideline_bottom"
+            app:layout_constraintEnd_toStartOf="@+id/guideline7"
+            app:layout_constraintHorizontal_bias="0.889"
+            app:layout_constraintStart_toStartOf="@+id/guideline_left"
+            app:layout_constraintTop_toTopOf="@+id/guideline_center"
+            app:layout_constraintVertical_bias="0.607" />
+
+        <Spinner
+            android:id="@+id/spinnerFrom"
+            android:entries="@array/forWeight"
+            android:layout_width="157dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:contentDescription="@string/from"
+            app:layout_constraintBottom_toTopOf="@+id/guideline_center"
+            app:layout_constraintEnd_toStartOf="@+id/guideline7"
+            app:layout_constraintHorizontal_bias="0.096"
+            app:layout_constraintStart_toStartOf="@+id/guideline_left"
+            app:layout_constraintTop_toTopOf="@+id/guideline_top"
+            app:layout_constraintVertical_bias="0.231" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_begin="173dp" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_top"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_begin="20dp" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_bottom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_begin="384dp" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_left"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="20dp" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="395dp" />
+
+        <EditText
+            android:id="@+id/textTo"
+            android:layout_width="148dp"
+            android:layout_height="48dp"
+            android:layout_marginBottom="24dp"
+            android:autofillHints=""
+            android:ems="10"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:hint="@string/to"
+            android:inputType="numberDecimal"
+            android:textAlignment="center"
+            android:windowSoftInputMode="stateHidden"
+            app:layout_constraintBottom_toTopOf="@+id/guideline_bottom"
+            app:layout_constraintEnd_toStartOf="@+id/guideline7"
+            app:layout_constraintHorizontal_bias="0.625"
+            app:layout_constraintStart_toStartOf="@+id/guideline_left"
+            app:layout_constraintTop_toBottomOf="@+id/spinnerTo"
+            app:layout_constraintVertical_bias="0.27"
+            tools:ignore="SpeakableTextPresentCheck" />
+
+        <EditText
+            android:id="@+id/textFrom"
+            style="@style/Widget.AppCompat.EditText"
+            android:layout_width="176dp"
+            android:layout_height="48dp"
+            android:ems="10"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:hint="@string/from"
+            android:inputType="textPersonName"
+            android:singleLine="false"
+            android:textAlignment="center"
+            android:textColorHighlight="#9C27B0"
+            android:textColorLink="#673AB7"
+            android:windowSoftInputMode="stateHidden"
+            app:layout_constraintBottom_toTopOf="@+id/guideline_center"
+            app:layout_constraintEnd_toStartOf="@+id/guideline7"
+            app:layout_constraintHorizontal_bias="0.09"
+            app:layout_constraintStart_toStartOf="@+id/guideline_left"
+            app:layout_constraintTop_toBottomOf="@+id/spinnerFrom"
+            app:layout_constraintVertical_bias="0.515" />
+
+        <Button
+            android:id="@+id/exchange"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="59dp"
+            android:layout_height="48dp"
+            android:background="@drawable/ic_baseline_compare_arrows_24"
+            android:enabled="true"
+            app:layout_constraintBottom_toTopOf="@+id/spinnerTo"
+            app:layout_constraintEnd_toStartOf="@+id/guideline7"
+            app:layout_constraintHorizontal_bias="0.731"
+            app:layout_constraintStart_toStartOf="@+id/guideline_left"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.685" />
+
+        <Button
+            android:id="@+id/button_paste"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/paste"
+            app:layout_constraintBottom_toTopOf="@+id/guideline_bottom"
+            app:layout_constraintEnd_toStartOf="@+id/guideline7"
+            app:layout_constraintHorizontal_bias="0.117"
+            app:layout_constraintStart_toStartOf="@+id/guideline_left"
+            app:layout_constraintTop_toBottomOf="@+id/textFrom"
+            app:layout_constraintVertical_bias="0.178" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</FrameLayout>
