@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="drills">Тренировки</string>
+    <string name="settings">Настройки</string>
+    <string name="mode">Тёмная тема</string>
+    <string name="lang">Язык</string>
+    <string name="font_size">Шрифт</string>
+</resources>
