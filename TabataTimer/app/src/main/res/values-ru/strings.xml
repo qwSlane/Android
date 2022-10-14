@@ -5,4 +5,8 @@
     <string name="mode">Тёмная тема</string>
     <string name="lang">Язык</string>
     <string name="font_size">Шрифт</string>
+    <string name="preparation">Подготовка</string>
+    <string name="work">Работа</string>
+    <string name="rest">Отдых</string>
+    <string name="cycles">Циклы</string>
 </resources>

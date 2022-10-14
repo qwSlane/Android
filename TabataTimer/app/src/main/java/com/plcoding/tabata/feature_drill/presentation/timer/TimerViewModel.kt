@@ -1,29 +1,33 @@
 package com.plcoding.tabata.feature_drill.presentation.timer
 
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
+import android.content.BroadcastReceiver
+import android.content.Intent
+import android.util.Log
+import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.plcoding.tabata.feature_drill.domain.model.Workout
 import com.plcoding.tabata.feature_drill.domain.use_case.DrillUseCases
-import com.plcoding.tabata.feature_drill.presentation.add_drill.AddEditDrillViewModel
+import com.plcoding.tabata.feature_drill.presentation.Preferences.PreferencesSerializer
 import com.plcoding.tabata.feature_drill.presentation.add_drill.DrillTextFieldState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
+import com.plcoding.tabata.R
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class TimerViewModel @Inject constructor(
     private val drillUseCases: DrillUseCases,
-    savedStateHandle: SavedStateHandle
+    savedStateHandle: SavedStateHandle,
 
-) : ViewModel() {
+    ) : ViewModel() {
 
     private var currentId: Int? = null
+
+    var list: List<Pair<Int, String>> = emptyList()
 
     private val _title = mutableStateOf(
         DrillTextFieldState(
@@ -36,26 +40,15 @@ class TimerViewModel @Inject constructor(
     private val _drillColor = mutableStateOf<Int>(Workout.colors.random().toArgb())
     val drillColor: State<Int> = _drillColor
 
-    private val _drillSets = mutableStateOf<Int>(1)
-    val drillSets: State<Int> = _drillSets
+    val _allTime = mutableStateOf<Int>(1)
 
-    private val _drillPrepare = mutableStateOf<Int>(10)
-    val drillPrepare: State<Int> = _drillPrepare
+    private val _totalTime = mutableStateOf<String>("")
+    val totalTime: State<String> = _totalTime
 
-    private val _drillWork = mutableStateOf<Int>(10)
-    val drillWork: State<Int> = _drillWork
+    private val _initialValue = mutableStateOf<Int>(1)
+    val initialValue: State<Int> = _initialValue
 
-    private val _drillRest = mutableStateOf<Int>(10)
-    val drillRest: State<Int> = _drillRest
-
-    private val _drillRestCount = mutableStateOf<Int>(1)
-    val drillRestCount: State<Int> = _drillRestCount
-
-    private val _drillRestPeriods = mutableStateOf<Int>(1)
-    val drillRestPeriods: State<Int> = _drillRestPeriods
-
-    private val _allTime = mutableStateOf<String>("")
-    val allTime: State<String> = _allTime
+    private lateinit var currentDrill: Workout
 
     init {
         savedStateHandle.get<Int>("drillId")?.let { drillId ->
@@ -63,33 +56,41 @@ class TimerViewModel @Inject constructor(
                 viewModelScope.launch {
                     drillUseCases.getDrill(drillId)?.also { drill ->
                         currentId = drill.id
-                        _title.value = title.value.copy(
-                            text = drill.title,
-                            isHintVisible = false
+                        currentDrill = Workout(
+                            drill.sets,
+                            drill.title,
+                            drill.workInterval,
+                            drill.restInterval,
+                            drill.restPeriods,
+                            drill.prepInterval,
+                            drill.color
                         )
-                        _drillColor.value = drill.color
-                        _drillPrepare.value = drill.prepInterval
-                        _drillRest.value = drill.restInterval
-                        _drillWork.value = drill.workInterval
-                        _drillRestCount.value = drill.restPeriods
-                        _drillSets.value = drill.sets
+
+                        Log.i("time:", currentDrill.workInterval.toString())
                     }
                 }
+
+                TimerSettings.initialTime = 10.0
+                TimerSettings.currentTime.value = 10.0
+
+
+                toMinutes()
             }
         }
-
-        val time =
-            (_drillPrepare.value + _drillRest.value * _drillRestCount.value + _drillWork.value) * _drillSets.value
-        toMinutes(time)
     }
 
 
+    fun toMinutes() {
+        val minutes = _allTime.value / 60
+        val sec = _allTime.value % 60
+        _totalTime.value = "$minutes:$sec"
 
-    private fun toMinutes(value: Int) {
-        val minutes = value / 60
-        val sec = value % 60
-        _allTime.value = "$minutes:$sec"
+    }
 
+    fun createList() {
+//        for (i in 0 until ) {
+//            list.plus(listOf(Pair(_drillPrepare.value, "str")))
+//        }
     }
 
 }

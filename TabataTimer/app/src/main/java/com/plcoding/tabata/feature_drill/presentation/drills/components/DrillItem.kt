@@ -1,9 +1,7 @@
 package com.plcoding.tabata.feature_drill.domain.util
 
-import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
@@ -14,16 +12,12 @@ import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Path
-import androidx.compose.ui.graphics.drawscope.clipPath
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.plcoding.tabata.feature_drill.domain.model.Workout
-
+import com.plcoding.tabata.R
 
 @Composable
 fun DrillItem(
@@ -32,10 +26,10 @@ fun DrillItem(
     onDeleteClick: () -> Unit,
     onLaunchClick: () -> Unit
 ) {
-    val prep: String = "Preparation:"
-    val work: String = "Work:"
-    val rest: String = "Rest:"
-    val cycles: String = "Cycles:"
+    val prep: String = stringResource(id = R.string.preparation)
+    val work: String = stringResource(id = R.string.work)
+    val rest: String = stringResource(id = R.string.rest)
+    val cycles: String = stringResource(id = R.string.cycles)
 
     Box(modifier = modifier) {
         Column(
@@ -58,28 +52,28 @@ fun DrillItem(
 
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = cycles + " " + drill.sets.toString(),
+                text = cycles + ": " + drill.sets.toString(),
                 style = MaterialTheme.typography.body1,
                 color = MaterialTheme.colors.onSurface,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
             Text(
-                text = prep + " " + drill.prepInterval.toString(),
+                text = prep + ": " + drill.prepInterval.toString(),
                 style = MaterialTheme.typography.body1,
                 color = MaterialTheme.colors.onSurface,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
             Text(
-                text = work + " " + drill.restInterval.toString(),
+                text = work + ": " + drill.workInterval.toString(),
                 style = MaterialTheme.typography.body1,
                 color = MaterialTheme.colors.onSurface,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
             Text(
-                text = rest + " " + drill.workInterval.toString(),
+                text = rest + ": " + drill.restInterval.toString(),
                 style = MaterialTheme.typography.body1,
                 color = MaterialTheme.colors.onSurface,
                 maxLines = 1,

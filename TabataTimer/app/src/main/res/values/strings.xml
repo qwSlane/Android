@@ -5,4 +5,8 @@
     <string name="mode">DarkMode</string>
     <string name="lang">Language</string>
     <string name="font_size">Font size</string>
+    <string name="preparation">Preparation</string>
+    <string name="work">Work</string>
+    <string name="rest">Rest</string>
+    <string name="cycles">Cycles</string>
 </resources>
