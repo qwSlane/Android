@@ -9,4 +9,8 @@
     <string name="work">Work</string>
     <string name="rest">Rest</string>
     <string name="cycles">Cycles</string>
+    <string name="add_action">Add action</string>
+    <string name="total_time">Total time</string>
+    <string name="actions_count">Actions</string>
+    <string name="hint">Enter title</string>
 </resources>

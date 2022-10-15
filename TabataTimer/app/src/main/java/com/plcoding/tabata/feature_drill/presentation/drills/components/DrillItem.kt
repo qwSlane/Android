@@ -26,10 +26,12 @@ fun DrillItem(
     onDeleteClick: () -> Unit,
     onLaunchClick: () -> Unit
 ) {
-    val prep: String = stringResource(id = R.string.preparation)
-    val work: String = stringResource(id = R.string.work)
-    val rest: String = stringResource(id = R.string.rest)
+
+    val total: String = stringResource(id = R.string.total_time)
+    val actions: String = stringResource(id = R.string.actions_count)
+
     val cycles: String = stringResource(id = R.string.cycles)
+    val calcTime: String = calculateTime(drill)
 
     Box(modifier = modifier) {
         Column(
@@ -48,7 +50,6 @@ fun DrillItem(
                 overflow = TextOverflow.Ellipsis
             )
 
-//            }
 
             Spacer(modifier = Modifier.height(8.dp))
             Text(
@@ -59,21 +60,14 @@ fun DrillItem(
                 overflow = TextOverflow.Ellipsis
             )
             Text(
-                text = prep + ": " + drill.prepInterval.toString(),
+                text = actions + ": " + (drill.actions.count() * drill.sets).toString(),
                 style = MaterialTheme.typography.body1,
                 color = MaterialTheme.colors.onSurface,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
             Text(
-                text = work + ": " + drill.workInterval.toString(),
-                style = MaterialTheme.typography.body1,
-                color = MaterialTheme.colors.onSurface,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
-            Text(
-                text = rest + ": " + drill.restInterval.toString(),
+                text = "$total: $calcTime",
                 style = MaterialTheme.typography.body1,
                 color = MaterialTheme.colors.onSurface,
                 maxLines = 1,
@@ -105,3 +99,13 @@ fun DrillItem(
         }
     }
 }
+
+fun calculateTime(drill: Workout): String {
+    var time: Int = 0
+    for (item in drill.actions) {
+        time += item.second
+    }
+    time *= drill.sets
+    return (time / 60).toString() + ":" + (time % 60).toString()
+}
+

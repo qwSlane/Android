@@ -8,6 +8,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import com.plcoding.tabata.R
 import com.plcoding.tabata.feature_drill.presentation.Preferences.PreferencesSerializer
 import com.plcoding.tabata.feature_drill.presentation.Preferences.presentation.PreferencesViewModel
 
@@ -16,13 +18,14 @@ fun DropDownList(
     requestToOpen: Boolean = false,
     list: List<String>,
     request: (Boolean) -> Unit,
-    selectedString: (String) -> Unit
+    selectedString: (String) -> Unit,
+    modifier: Modifier = Modifier
 ) {
 
     DropdownMenu(
         expanded = requestToOpen,
         onDismissRequest = { request(false) },
-
+        modifier = modifier
         ) {
         list.forEach {
             DropdownMenuItem(

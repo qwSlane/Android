@@ -9,4 +9,8 @@
     <string name="work">Работа</string>
     <string name="rest">Отдых</string>
     <string name="cycles">Циклы</string>
+    <string name="add_action">Действие</string>
+    <string name="total_time">Суммарное время</string>
+    <string name="actions_count">Действий</string>
+    <string name="hint">Название</string>
 </resources>

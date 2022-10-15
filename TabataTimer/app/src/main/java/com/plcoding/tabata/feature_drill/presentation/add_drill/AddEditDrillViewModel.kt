@@ -1,8 +1,6 @@
 package com.plcoding.tabata.feature_drill.presentation.add_drill
 
-import android.util.Log
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.toArgb
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -14,7 +12,9 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
+import java.util.*
 import javax.inject.Inject
+import kotlin.collections.ArrayList
 
 @HiltViewModel
 class AddEditDrillViewModel @Inject constructor(
@@ -37,18 +37,12 @@ class AddEditDrillViewModel @Inject constructor(
     private val _drillSets = mutableStateOf<Int>(1)
     val drillSets: State<Int> = _drillSets
 
-    private val _drillPrepare = mutableStateOf<Int>(10)
-    val drillPrepare: State<Int> = _drillPrepare
-
-    private val _drillWork = mutableStateOf<Int>(10)
-    val drillWork: State<Int> = _drillWork
-
-    private val _drillRest = mutableStateOf<Int>(10)
-    val drillRest: State<Int> = _drillRest
-
-    private val _drillRestPeriods = mutableStateOf<Int>(1)
-    val drillRestPeriods: State<Int> = _drillRestPeriods
-
+    private var _items = mutableListOf(
+        Pair(mutableStateOf("Preparation"), mutableStateOf(10)),
+        Pair(mutableStateOf("Work"), mutableStateOf(10)),
+        Pair(mutableStateOf("Rest"), mutableStateOf(10)),
+    )
+    var items by mutableStateOf(_items)
 
     private val _eventFlow = MutableSharedFlow<UiEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
@@ -63,10 +57,11 @@ class AddEditDrillViewModel @Inject constructor(
                             text = drill.title,
                             isHintVisible = false
                         )
-                        _drillColor.value = drill.color
-                        _drillPrepare.value = drill.prepInterval
-                        _drillRest.value = drill.restInterval
-                        _drillWork.value = drill.workInterval
+                        items.clear()
+                        for(action in drill.actions){
+                            items =
+                                (items + listOf(Pair(mutableStateOf(action.first), mutableStateOf(action.second)))) as MutableList<Pair<MutableState<String>, MutableState<Int>>>
+                        }
                         _drillSets.value = drill.sets
                     }
                 }
@@ -90,43 +85,47 @@ class AddEditDrillViewModel @Inject constructor(
             is AddEditDrillEvent.ChangeColor -> {
                 _drillColor.value = event.color
             }
-            is AddEditDrillEvent.Inc -> {
-                when (event.type) {
-                    "Sets" -> _drillSets.value += event.value
-                    "Work" -> _drillWork.value += event.value
-                    "Rest" -> _drillRest.value += event.value
-                    "RestCount" -> _drillRestPeriods.value += event.value
-                    "Preparation" -> _drillPrepare.value += event.value
-                }
-            }
             is AddEditDrillEvent.Dec -> {
-                when (event.type) {
-                    "Sets" -> _drillSets.value =
-                        if (_drillSets.value - event.value < 1) 1 else _drillSets.value
-                    "Work" -> _drillWork.value =
-                        if (--_drillWork.value - event.value < 1) 1 else _drillWork.value
-                    "Rest" -> _drillRest.value =
-                        if (--_drillRest.value - event.value < 1) 1 else _drillRest.value
-                    "RestCount" -> _drillRestPeriods.value =
-                        if (_drillRestPeriods.value - event.value < 1) 1 else _drillRestPeriods.value
-                    "Preparation" -> _drillPrepare.value =
-                        if (--_drillPrepare.value - event.value < 1) 1 else _drillPrepare.value
+                if (items[event.value].second.value - 1 < 1) {
+                    items[event.value].second.value = 1
+                } else {
+                    items[event.value].second.value--
                 }
-
             }
-
+            is AddEditDrillEvent.Inc -> {
+                items[event.value].second.value += 1
+            }
+            is AddEditDrillEvent.CycleInc -> {
+                _drillSets.value += event.value
+            }
+            is AddEditDrillEvent.CycleDec -> {
+                if (_drillSets.value - event.value < 1) {
+                    _drillSets.value = 1
+                } else {
+                    _drillSets.value--
+                }
+            }
+            is AddEditDrillEvent.AddDrill -> {
+                items = (items + listOf(Pair(mutableStateOf("Preparation"), mutableStateOf(10)))) as MutableList<Pair<MutableState<String>, MutableState<Int>>>
+            }
+            is AddEditDrillEvent.Delete ->{
+                items = items.toMutableList().also {
+                    it.removeAt(index = event.index)
+                }
+            }
             is AddEditDrillEvent.SaveDrill -> {
                 viewModelScope.launch {
                     try {
+                        var actions: List<Pair<String, Int>> = emptyList()
+                        for(item in items){
+                            actions = actions + listOf(Pair(item.first.value, item.second.value))
+                        }
                         drillUseCases.addDrill(
                             Workout(
                                 title = title.value.text,
                                 color = drillColor.value,
-                                workInterval = drillWork.value,
-                                restInterval = drillRest.value,
                                 sets = drillSets.value,
-                                restPeriods = drillRestPeriods.value,
-                                prepInterval = drillPrepare.value,
+                                actions = actions as ArrayList<Pair<String, Int>>,
                                 id = currentId
                             )
                         )
@@ -140,10 +139,14 @@ class AddEditDrillViewModel @Inject constructor(
                     }
                 }
             }
+
         }
 
 
     }
+
+//
+
 
     sealed class UiEvent {
         data class ShowSnackbar(val message: String) : UiEvent()

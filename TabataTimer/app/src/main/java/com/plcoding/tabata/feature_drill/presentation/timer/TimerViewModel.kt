@@ -1,20 +1,15 @@
 package com.plcoding.tabata.feature_drill.presentation.timer
 
-import android.content.BroadcastReceiver
-import android.content.Intent
 import android.util.Log
 import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.toArgb
-import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.plcoding.tabata.feature_drill.domain.model.Workout
 import com.plcoding.tabata.feature_drill.domain.use_case.DrillUseCases
-import com.plcoding.tabata.feature_drill.presentation.Preferences.PreferencesSerializer
 import com.plcoding.tabata.feature_drill.presentation.add_drill.DrillTextFieldState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import com.plcoding.tabata.R
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -59,14 +54,10 @@ class TimerViewModel @Inject constructor(
                         currentDrill = Workout(
                             drill.sets,
                             drill.title,
-                            drill.workInterval,
-                            drill.restInterval,
-                            drill.restPeriods,
-                            drill.prepInterval,
+                            drill.actions,
                             drill.color
                         )
 
-                        Log.i("time:", currentDrill.workInterval.toString())
                     }
                 }
 
@@ -87,10 +78,5 @@ class TimerViewModel @Inject constructor(
 
     }
 
-    fun createList() {
-//        for (i in 0 until ) {
-//            list.plus(listOf(Pair(_drillPrepare.value, "str")))
-//        }
-    }
 
 }

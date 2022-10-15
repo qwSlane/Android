@@ -10,9 +10,14 @@ sealed class AddEditDrillEvent{
     data class ChangeColor(val color: Int): AddEditDrillEvent()
 
     object SaveDrill: AddEditDrillEvent()
+    object AddDrill: AddEditDrillEvent()
 
-    data class Inc(val type: String, val value: Int): AddEditDrillEvent()
-    data class Dec(val type: String, val value: Int): AddEditDrillEvent()
+    data class Delete(val index: Int): AddEditDrillEvent()
+
+    data class Inc(val value: Int): AddEditDrillEvent()
+    data class CycleInc(val value: Int): AddEditDrillEvent()
+    data class Dec(val value: Int): AddEditDrillEvent()
+    data class CycleDec(val value: Int): AddEditDrillEvent()
 
 
 
