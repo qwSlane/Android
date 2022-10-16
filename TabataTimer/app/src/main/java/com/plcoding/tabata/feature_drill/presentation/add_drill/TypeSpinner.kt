@@ -28,41 +28,45 @@ fun TypeSpinner(
         stringResource(id = R.string.work),
         stringResource(id = R.string.rest),
     )
-    val map: Map<String, String> = mapOf(
-        "Preparation" to stringResource(id = R.string.preparation),
-        "Подготовка" to stringResource(id = R.string.preparation),
-        "Work" to stringResource(id = R.string.work),
-        "Работа" to stringResource(id = R.string.work),
-        "Работа" to stringResource(id = R.string.work),
-        "Rest" to stringResource(id = R.string.rest),
-        "Отдых" to stringResource(id = R.string.rest),
-        )
+
+//    val map: Map<String, String> = mapOf(
+//        "Preparation" to stringResource(id = R.string.preparation),
+//        "Подготовка" to stringResource(id = R.string.preparation),
+//        "Work" to stringResource(id = R.string.work),
+//        "Работа" to stringResource(id = R.string.work),
+//        "Работа" to stringResource(id = R.string.work),
+//        "Rest" to stringResource(id = R.string.rest),
+//        "Отдых" to stringResource(id = R.string.rest),
+//        )
 
     val text =
-        remember { mutableStateOf(map[viewmodel.items[index].first.value]) } // initial value
+        remember { mutableStateOf(viewmodel.items[index].first.value) } // initial value
     var isOpen = remember { mutableStateOf(false) } // initial value
     val openCloseOfDropDownList: (Boolean) -> Unit = {
         isOpen.value = it
     }
     val userSelectedString: (String) -> Unit = {
-        text.value = it
+        when(it){
+            "Preparation"->  text.value = R.string.preparation
+            "Work"->  text.value = R.string.work
+            "Rest"->  text.value = R.string.rest
+        }
 
-        viewmodel.items[index].first.value = it
+
+        viewmodel.items[index].first.value = text.value
     }
     Box(
         contentAlignment = Alignment.Center,
 
         ) {
         Column {
-            text.value?.let {
-                Text(
-                    text = "$index. $it",
-                    style = MaterialTheme.typography.h5,
-                    modifier = Modifier.clickable {
-                        isOpen.value = !isOpen.value
-                    }
-                )
-            }
+            Text(
+                text = "$index. " + stringResource(id = text.value),
+                style = MaterialTheme.typography.h5,
+                modifier = Modifier.clickable {
+                    isOpen.value = !isOpen.value
+                }
+            )
 
             DropDownList(
                 requestToOpen = isOpen.value,

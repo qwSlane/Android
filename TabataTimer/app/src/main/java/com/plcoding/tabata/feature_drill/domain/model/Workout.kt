@@ -1,7 +1,5 @@
 package com.plcoding.tabata.feature_drill.domain.model
 
-import android.util.Log
-import androidx.compose.runtime.MutableState
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverter
@@ -14,7 +12,7 @@ import com.plcoding.tabata.ui.theme.*
 data class Workout(
     val sets: Int,
     val title: String,
-    val actions: ArrayList<Pair<String, Int>>,
+    val actions: ArrayList<Pair<Int, Int>>,
     val color: Int,
     @PrimaryKey val id: Int? = null
 
@@ -26,18 +24,18 @@ data class Workout(
 
 public class WorkoutConverter {
     @TypeConverter
-    fun fromActions(value: ArrayList<Pair<String, Int>>): String {
+    fun fromActions(value: ArrayList<Pair<Int, Int>>): String {
         val gson = Gson()
         val type =
-            object : TypeToken<ArrayList<Pair<String, Int>>>() {}.type
+            object : TypeToken<ArrayList<Pair<Int, Int>>>() {}.type
         return gson.toJson(value, type)
     }
 
     @TypeConverter
-    fun toActions(value: String): ArrayList<Pair<String, Int>> {
+    fun toActions(value: String): ArrayList<Pair<Int, Int>> {
         val gson = Gson()
         val type =
-            object : TypeToken<ArrayList<Pair<String, Int>>>() {}.type
+            object : TypeToken<ArrayList<Pair<Int, Int>>>() {}.type
         return gson.fromJson(value, type)
     }
 }

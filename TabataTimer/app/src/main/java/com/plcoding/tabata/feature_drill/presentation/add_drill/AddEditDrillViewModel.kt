@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
+import com.plcoding.tabata.R
 import kotlin.collections.ArrayList
 
 @HiltViewModel
@@ -38,9 +39,9 @@ class AddEditDrillViewModel @Inject constructor(
     val drillSets: State<Int> = _drillSets
 
     private var _items = mutableListOf(
-        Pair(mutableStateOf("Preparation"), mutableStateOf(10)),
-        Pair(mutableStateOf("Work"), mutableStateOf(10)),
-        Pair(mutableStateOf("Rest"), mutableStateOf(10)),
+        Pair(mutableStateOf(R.string.preparation), mutableStateOf(10)),
+        Pair(mutableStateOf(R.string.work), mutableStateOf(10)),
+        Pair(mutableStateOf(R.string.rest), mutableStateOf(10)),
     )
     var items by mutableStateOf(_items)
 
@@ -53,6 +54,7 @@ class AddEditDrillViewModel @Inject constructor(
                 viewModelScope.launch {
                     drillUseCases.getDrill(drillId)?.also { drill ->
                         currentId = drill.id
+                        _drillColor.value = drill.color
                         _title.value = title.value.copy(
                             text = drill.title,
                             isHintVisible = false
@@ -60,7 +62,7 @@ class AddEditDrillViewModel @Inject constructor(
                         items.clear()
                         for(action in drill.actions){
                             items =
-                                (items + listOf(Pair(mutableStateOf(action.first), mutableStateOf(action.second)))) as MutableList<Pair<MutableState<String>, MutableState<Int>>>
+                                (items + listOf(Pair(mutableStateOf(action.first), mutableStateOf(action.second)))) as MutableList<Pair<MutableState<Int>, MutableState<Int>>>
                         }
                         _drillSets.value = drill.sets
                     }
@@ -106,7 +108,7 @@ class AddEditDrillViewModel @Inject constructor(
                 }
             }
             is AddEditDrillEvent.AddDrill -> {
-                items = (items + listOf(Pair(mutableStateOf("Preparation"), mutableStateOf(10)))) as MutableList<Pair<MutableState<String>, MutableState<Int>>>
+                items = (items + listOf(Pair(mutableStateOf(R.string.preparation), mutableStateOf(10)))) as MutableList<Pair<MutableState<Int>, MutableState<Int>>>
             }
             is AddEditDrillEvent.Delete ->{
                 items = items.toMutableList().also {
@@ -116,7 +118,7 @@ class AddEditDrillViewModel @Inject constructor(
             is AddEditDrillEvent.SaveDrill -> {
                 viewModelScope.launch {
                     try {
-                        var actions: List<Pair<String, Int>> = emptyList()
+                        var actions: List<Pair<Int, Int>> = emptyList()
                         for(item in items){
                             actions = actions + listOf(Pair(item.first.value, item.second.value))
                         }
@@ -125,7 +127,7 @@ class AddEditDrillViewModel @Inject constructor(
                                 title = title.value.text,
                                 color = drillColor.value,
                                 sets = drillSets.value,
-                                actions = actions as ArrayList<Pair<String, Int>>,
+                                actions = actions as ArrayList<Pair<Int, Int>>,
                                 id = currentId
                             )
                         )

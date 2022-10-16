@@ -125,16 +125,15 @@ class MainActivity : ComponentActivity() {
         PreferencesSerializer.readPreferences()
         setLanguage(PreferencesSerializer.preferences.language)
 
-        registerReceiver(updateTime, IntentFilter(TimerService.TIME_UPDATED))
+        registerReceiver(null, IntentFilter(TimerService.TIME_UPDATED))
         TimerSettings.appcontext = applicationContext
     }
 
-    private val updateTime: BroadcastReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context?, intent: Intent) {
-            TimerSettings.currentTime.value =
-                intent.getDoubleExtra(TimerService.TIME_EXTRA, 0.0)
-        }
+//    private val updateTime: BroadcastReceiver = object : BroadcastReceiver() {
+//        override fun onReceive(context: Context?, intent: Intent) {
+////            TimerSettings.elapsed =
+//                intent.getIntArrayExtra(TimerService.TIME_EXTRA)!!
+//        }
+//    }
 
-
-    }
 }

@@ -8,7 +8,7 @@ import com.plcoding.tabata.feature_drill.domain.model.WorkoutConverter
 
 @Database(
     entities = [Workout::class],
-    version = 2
+    version = 3
 )
 
 @TypeConverters(WorkoutConverter::class)

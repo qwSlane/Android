@@ -5,39 +5,60 @@ import android.content.Context
 import android.content.Intent
 import android.media.MediaPlayer
 import android.os.IBinder
+import android.provider.Settings
 import android.util.Log
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.util.*
 
 
 class TimerSettings(){
     companion object{
-        var initialTime:Double = 0.0
-        var currentTime = mutableStateOf<Double>(0.0)
+        var elapsedTime = mutableStateOf<Int>(0)
+        var currentIndex = mutableStateOf<Int>(0)
+        var currentTime = mutableStateOf<Int>(0)
+        lateinit var elapsed: IntArray
         lateinit var appcontext: Context
     }
 }
 
 class TimerService() : Service() {
 
-    private lateinit var player: MediaPlayer
+    private var player: MediaPlayer = MediaPlayer()
     private val timer = Timer()
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
-        val time = intent.getDoubleExtra(TIME_EXTRA, 0.0)
+        val time = intent.getIntArrayExtra(TIME_EXTRA)
+        player = MediaPlayer.create(this, Settings.System.DEFAULT_NOTIFICATION_URI)
         timer.scheduleAtFixedRate(TimeTask(time), 1000, 1000)
+
         return START_NOT_STICKY
     }
 
-    private inner class TimeTask(private var time:Double): TimerTask(){
+    private inner class TimeTask(private var time: IntArray?): TimerTask(){
         override fun run() {
             val intent = Intent(TIME_UPDATED)
-            time--
-            Log.i("TIME", time.toString())
-            intent.putExtra(TIME_EXTRA, time)
+            time!![TimerSettings.currentIndex.value] -=1
+            TimerSettings.elapsedTime.value++
+            if(time!![TimerSettings.currentIndex.value] == 0){
+                player.start()
+                TimerSettings.currentIndex.value +=1
+//                stopPlayer()
+            }
+            TimerSettings.currentTime.value = time!![TimerSettings.currentIndex.value]
+
+//            intent.putExtra(TIME_EXTRA, intArrayOf())
             sendBroadcast(intent)
         }
+    }
+
+     @OptIn(DelicateCoroutinesApi::class)
+     fun stopPlayer() = GlobalScope.launch{
+        delay(2000)
+        player.stop()
     }
 
     override fun onDestroy() {
