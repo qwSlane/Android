@@ -8,7 +8,7 @@ import com.google.gson.Gson
 
 class PreferencesSerializer {
     companion object {
-        var preferences = Preferences(1, Language.ENGLISH, 12)
+        var preferences = Preferences(1, Language.ENGLISH, 0)
         var context: Context? = null
         var configuration: Configuration? = null
 
@@ -35,7 +35,12 @@ class PreferencesSerializer {
             val json = context!!.getSharedPreferences("settings", MODE_PRIVATE)
                 .getString("settings", "NULL")
             val gson = Gson()
-            preferences = gson.fromJson(json, Preferences::class.java)
+            if(!json.isNullOrEmpty()){
+                preferences = gson.fromJson(json, Preferences::class.java)
+            }
+            else{
+                preferences = Preferences(1, Language.ENGLISH, 0)
+            }
         }
 
     }

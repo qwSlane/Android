@@ -35,7 +35,6 @@ import com.plcoding.tabata.feature_drill.presentation.drills.components.Transpar
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun AddEditDrillScreen(
     navController: NavController,

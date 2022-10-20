@@ -4,6 +4,9 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.material.DropdownMenu
+import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -24,20 +27,10 @@ fun TypeSpinner(
     index: Int
 ) {
     val sizes = listOf(
-        stringResource(id = R.string.preparation),
-        stringResource(id = R.string.work),
-        stringResource(id = R.string.rest),
+        Pair(stringResource(id = R.string.preparation), 0),
+        Pair(stringResource(id = R.string.work), 1),
+        Pair(stringResource(id = R.string.rest), 2)
     )
-
-//    val map: Map<String, String> = mapOf(
-//        "Preparation" to stringResource(id = R.string.preparation),
-//        "Подготовка" to stringResource(id = R.string.preparation),
-//        "Work" to stringResource(id = R.string.work),
-//        "Работа" to stringResource(id = R.string.work),
-//        "Работа" to stringResource(id = R.string.work),
-//        "Rest" to stringResource(id = R.string.rest),
-//        "Отдых" to stringResource(id = R.string.rest),
-//        )
 
     val text =
         remember { mutableStateOf(viewmodel.items[index].first.value) } // initial value
@@ -45,11 +38,11 @@ fun TypeSpinner(
     val openCloseOfDropDownList: (Boolean) -> Unit = {
         isOpen.value = it
     }
-    val userSelectedString: (String) -> Unit = {
-        when(it){
-            "Preparation"->  text.value = R.string.preparation
-            "Work"->  text.value = R.string.work
-            "Rest"->  text.value = R.string.rest
+    val userSelectedString: (Int) -> Unit = {
+        when (it) {
+            0 -> text.value = R.string.preparation
+            1 -> text.value = R.string.work
+            2 -> text.value = R.string.rest
         }
 
 
@@ -68,7 +61,7 @@ fun TypeSpinner(
                 }
             )
 
-            DropDownList(
+            DropDownTypeList(
                 requestToOpen = isOpen.value,
                 list = sizes,
                 openCloseOfDropDownList,
@@ -78,5 +71,33 @@ fun TypeSpinner(
             )
         }
 
+    }
+}
+
+
+@Composable
+fun DropDownTypeList(
+    requestToOpen: Boolean = false,
+    list: List<Pair<String, Int>>,
+    request: (Boolean) -> Unit,
+    selectedString: (Int) -> Unit,
+    modifier: Modifier = Modifier
+) {
+
+    DropdownMenu(
+        expanded = requestToOpen,
+        onDismissRequest = { request(false) },
+        modifier = modifier
+    ) {
+        list.forEach {
+            DropdownMenuItem(
+                onClick = {
+                    request(false)
+                    selectedString(it.second)
+                }
+            ) {
+                Text(it.first, modifier = Modifier.wrapContentWidth())
+            }
+        }
     }
 }

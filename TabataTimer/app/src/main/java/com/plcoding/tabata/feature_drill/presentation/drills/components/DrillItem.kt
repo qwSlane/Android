@@ -106,6 +106,12 @@ fun calculateTime(drill: Workout): String {
         time += item.second
     }
     time *= drill.sets
-    return (time / 60).toString() + ":" + (time % 60).toString()
+    var sec: String = ""
+    if (time % 60 < 10) {
+        sec = "0" + (time % 60).toString()
+    } else {
+        sec = (time % 60).toString()
+    }
+    return (time / 60).toString() + ":" + sec
 }
 

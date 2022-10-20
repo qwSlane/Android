@@ -40,15 +40,11 @@ fun TimerScreen(
         )
     }
 
-    var currentTime by remember {
-        mutableStateOf(TimerSettings.currentTime)
-    }
-
-    var currentTitle by remember {
-        mutableStateOf("Preparation")
-    }
-
     var isTimerRunning by remember {
+        mutableStateOf(false)
+    }
+
+    var isOpenDialog by remember {
         mutableStateOf(false)
     }
 
@@ -56,6 +52,9 @@ fun TimerScreen(
         if (isTimerRunning) {
             viewModel._allTime.value = viewModel.allTime - TimerSettings.elapsedTime.value
             viewModel.toMinutes()
+            if(viewModel._allTime.value == 0){
+                isOpenDialog = true
+            }
         }
     }
 
@@ -63,8 +62,31 @@ fun TimerScreen(
         key1 = TimerSettings.currentIndex.value,
         key2 = TimerSettings.currentTime.value
     ) {
-        viewModel.title.value =
-            viewModel.currentDrill.actions[TimerSettings.currentIndex.value].first
+        if (viewModel.isDrillInitialized() && TimerSettings.currentIndex.value < viewModel.actionsCount) {
+                viewModel.title.value =
+                    viewModel.currentDrill.actions[TimerSettings.currentIndex.value].first
+        }
+    }
+
+    if (isOpenDialog) {
+        AlertDialog(
+            onDismissRequest = {
+                viewModel.exit()
+                navController.navigateUp()
+            },
+            text = { Text("Finish") },
+            buttons = {
+                Button(
+                    onClick = {
+                        viewModel.exit()
+                        navController.navigateUp()
+                    }
+                ) {
+                    Text("OK", style = MaterialTheme.typography.h6)
+                }
+            },
+            modifier = Modifier.fillMaxWidth()
+        )
     }
 
     Column(
@@ -83,13 +105,16 @@ fun TimerScreen(
             verticalAlignment = Alignment.CenterVertically
         ) {
             IconButton(
-                onClick = { /*TODO*/ })
+                onClick = {
+                    viewModel.exit()
+                    navController.navigateUp()
+                })
             {
                 Icon(
                     modifier = Modifier
                         .size(50.dp),
                     imageVector = Icons.Default.ArrowBackIos,
-                    contentDescription = "stop"
+                    contentDescription = "back"
                 )
             }
 
@@ -136,11 +161,42 @@ fun TimerScreen(
             modifier = Modifier.weight(1f)
         )
         Spacer(modifier = Modifier.height(15.dp))
-        Text(
-            text = TimerSettings.currentTime.value.toString(),
-            style = MaterialTheme.typography.h2,
-            modifier = Modifier.weight(1.5f)
-        )
+        Row(
+            modifier = Modifier.weight(1.5f).fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceAround
+        ) {
+            IconButton(onClick = {
+                viewModel.skipBack()
+                isTimerRunning = true
+            }) {
+                Icon(
+                    modifier = Modifier
+                        .size(50.dp),
+                    imageVector = Icons.Default.SkipPrevious,
+                    contentDescription = "skip"
+                )
+
+            }
+            Text(
+                text = TimerSettings.currentTime.value.toString(),
+                style = MaterialTheme.typography.h2,
+
+                )
+            IconButton(onClick = {
+                viewModel.skipNext()
+                isTimerRunning = true
+            }) {
+                Icon(
+                    modifier = Modifier
+                        .size(50.dp),
+                    imageVector = Icons.Default.SkipNext,
+                    contentDescription = "skip"
+                )
+
+            }
+        }
+
 
         Box(modifier = Modifier.weight(5f)) {
             LazyColumn(
@@ -158,11 +214,11 @@ fun TimerScreen(
                             type = item.first,
                             color = drillBackgroundAnimatable.value
                         )
-
                     }
                 }
             }
         }
+
         Box(modifier = Modifier.weight(1f)) {
             Divider(
                 color = Color(
@@ -172,6 +228,11 @@ fun TimerScreen(
                     )
                 ),
                 thickness = 3.dp
+            )
+            Text(
+                text = TimerSettings.currentIndex.value.toString() + "/" + viewModel.actionsCount,
+                style = MaterialTheme.typography.h3,
+                modifier = Modifier.align(Alignment.Center)
             )
         }
     }

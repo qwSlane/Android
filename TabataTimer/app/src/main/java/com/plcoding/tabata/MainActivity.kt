@@ -30,6 +30,7 @@ import com.plcoding.tabata.feature_drill.presentation.drills.components.DrillsSc
 import com.plcoding.tabata.feature_drill.presentation.timer.TimerScreen
 import com.plcoding.tabata.feature_drill.presentation.timer.TimerService
 import com.plcoding.tabata.feature_drill.presentation.timer.TimerSettings
+import com.plcoding.tabata.feature_drill.presentation.timer.TimerViewModel
 import com.plcoding.tabata.feature_drill.presentation.util.Screen
 import com.plcoding.tabata.ui.theme.AppTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -46,6 +47,8 @@ class MainActivity : ComponentActivity() {
             setPreferences()
             var theme = remember { mutableStateOf(PreferencesSerializer.preferences.theme) }
             var fontSize = remember { mutableStateOf(PreferencesSerializer.preferences.fontSize) }
+
+
 
             AppTheme(theme.value, fontSize.value) {
                 Surface(
@@ -128,12 +131,5 @@ class MainActivity : ComponentActivity() {
         registerReceiver(null, IntentFilter(TimerService.TIME_UPDATED))
         TimerSettings.appcontext = applicationContext
     }
-
-//    private val updateTime: BroadcastReceiver = object : BroadcastReceiver() {
-//        override fun onReceive(context: Context?, intent: Intent) {
-////            TimerSettings.elapsed =
-//                intent.getIntArrayExtra(TimerService.TIME_EXTRA)!!
-//        }
-//    }
 
 }

@@ -1,5 +1,6 @@
 package com.plcoding.tabata.feature_drill.presentation.add_drill
 
+import android.util.Log
 import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.toArgb
 import androidx.lifecycle.SavedStateHandle
@@ -83,6 +84,7 @@ class AddEditDrillViewModel @Inject constructor(
                     isHintVisible = !event.focusState.isFocused &&
                             title.value.text.isBlank()
                 )
+
             }
             is AddEditDrillEvent.ChangeColor -> {
                 _drillColor.value = event.color
@@ -146,9 +148,6 @@ class AddEditDrillViewModel @Inject constructor(
 
 
     }
-
-//
-
 
     sealed class UiEvent {
         data class ShowSnackbar(val message: String) : UiEvent()
